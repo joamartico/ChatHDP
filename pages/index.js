@@ -72,6 +72,7 @@ export default function Home() {
 
 		const date = new Date();
 		const dateHour = date.getHours();
+		const dateMinutes = date.getMinutes();
 		const simpleDate = date
 			.toLocaleDateString("es-AR", {
 				year: "numeric",
@@ -82,9 +83,9 @@ export default function Home() {
 			
 
 		setDoc(
-			doc(db, simpleDate, `${dateHour}`),
-			{ messages }
-			// { merge: true }
+			doc(db, simpleDate, `${dateHour}:${dateMinutes}`),
+			{ messages },
+			{ merge: true }
 		);
 	}, [messages]);
 
