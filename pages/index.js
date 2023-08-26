@@ -1,5 +1,9 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
+import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+import firebaseApp from "../firebase";
+
+export const db = getFirestore(firebaseApp);
 
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 const API_URL = "https://api.openai.com/v1/chat/completions";
@@ -62,6 +66,27 @@ export default function Home() {
 			behavior: "smooth",
 		});
 	}
+
+	useEffect(() => {
+		if (!db) return;
+
+		const date = new Date();
+		const dateHour = date.getHours();
+		const simpleDate = date
+			.toLocaleDateString("es-AR", {
+				year: "numeric",
+				month: "2-digit",
+				day: "2-digit",
+			})
+			.replaceAll("/", "-");
+			
+
+		setDoc(
+			doc(db, simpleDate, `${dateHour}`),
+			{ messages }
+			// { merge: true }
+		);
+	}, [messages]);
 
 	return (
 		<>
